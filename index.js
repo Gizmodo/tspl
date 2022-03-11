@@ -1,39 +1,56 @@
 // Include Nodejs' net module.
+const http = require("http");
 const Net = require('net');
+const hostHttp = 'localhost';
+const portHttp = 8000;
 // The port number and hostname of the server.
 const port = 9100;
-const host = '192.168.88.17';
+const host = '10.254.1.230';
 // Create a new TCP client.
-const client = new Net.Socket();
+const tcpClient = new Net.Socket();
 // Send a connection request to the server.
-client.connect({port: port, host: host}, function () {
-    // If there is no error, the server has accepted the request and created a new
-    // socket dedicated to us.
+// The client can also receive data from the server by reading from its socket.
+function sendTCP(ip,payload){
+
+
+tcpClient.connect({port: 9100, host: payload.ip}, function () {
     console.log('TCP connection established with the server.');
 
-    // The client can now send data to the server by writing to its socket.
-    let data = "SIZE 4,3\n" +
-        "GAP 0,0\n" +
-        "DIRECTION 1\n" +
-        "CLS\n" +
-        "DMATRIX 10,110,400,400, \"DMATRIX EXAMPLE 1\"\n" +
-        "DMATRIX 310,110,400,400,x6, \"DMATRIX EXAMPLE 2\"\n" +
-        "DMATRIX 10,310,400,400,x8,18,18, \"DMATRIX EXAMPLE 3\"\n" +
-        "PRINT 1,1\n"
-    client.write(data);
+    tcpClient.write(data, function () {
+        res.end(`{"message": "Data was send to printer!"}`);
+        tcpClient.end()
+    });
 });
-
-// The client can also receive data from the server by reading from its socket.
-client.on('data', function (chunk) {
-    console.log(`Data received from the server: ${chunk.toString()}.`);
-
-    // Request an end to the connection after the data has been received.
-    client.end();
-});
-
-client.on('error', function () {
+tcpClient.on('error', function () {
     console.log('Error TCP connection');
+    res.end(`{"message": "Printer is not response!"}`);
 });
-client.on('end', function () {
+tcpClient.on('end', function () {
     console.log('Requested an end to the TCP connection');
+});
+}
+const requestListener = function (req, res) {
+
+    let data = payload.payload
+
+    /* res.setHeader("Content-Type", "application/json");
+     res.writeHead(200);
+     res.end(`{"message": "This is a JSON response"}`);*/
+};
+const server = http.createServer(async (req,res) =>{
+    const buffers = [];
+    for await (const chunk of req) {
+        buffers.push(chunk);
+    }
+    const data = Buffer.concat(buffers).toString();
+    let payload = JSON.parse(data);
+    sendTCP(payload.ip,payload.payload)
+    req.on('end', () => {
+        res.setHeader("Content-Type", "application/json");
+        // res.end();
+    })
+})
+
+server.listen(portHttp, hostHttp, () => {
+    console.log(`Server is running on http://${hostHttp}:${portHttp}`);
 });
