@@ -4,36 +4,16 @@ const port = 3000
 const fs = require('fs')
 const basicAuth = require('express-basic-auth')
 const slowDown = require("express-slow-down");
+const logger = require('./log/logger')
+const httpLogger = require('./log/httpLogger')
 const speedLimiter = slowDown({
     windowMs: 15 * 60 * 1000, // 15 minutes
     // delayAfter: 1, // allow 100 requests per 15 minutes, then...
     delayMs: 3000 // begin adding 500ms of delay per request above 100:
-    // request # 101 is delayed by  500ms
-    // request # 102 is delayed by 1000ms
-    // request # 103 is delayed by 1500ms
-    // etc.
 });
-//  apply to all requests
+app.use(httpLogger)
 app.use(speedLimiter);
-var winston = require('winston'),
-    expressWinston = require('express-winston');
 
-app.use(expressWinston.logger({
-    transports: [
-        new winston.transports.Console()
-    ],
-    format: winston.format.combine(
-        // winston.format.colorize(),
-        winston.format.json()
-    ),
-    meta: true, // optional: control whether you want to log the meta data about the request (default to true)
-    msg: "HTTP {{req.method}} {{req.url}}", // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
-    expressFormat: true, // Use the default Express/morgan request formatting. Enabling this will override any msg if true. Will only output colors with colorize set to true
-    colorize: false, // Color the text and status code, using the Express/morgan color palette (text: gray, status: default green, 3XX cyan, 4XX yellow, 5XX red).
-    ignoreRoute: function (req, res) {
-        return false;
-    } // optional: allows to skip some log messages based on request and/or response
-}));
 let isUseAuth = false
 if (isUseAuth) {
     app.use(basicAuth({
@@ -83,7 +63,7 @@ app.get('/Tech/hs/tsd/printers/get', (req, res) => {
     })
 });
 app.get('/Tech/hs/tsd/users/get', (req, res) => {
-    console.log(req.hostname + " запрос списка пользователей")
+    logger.info(req.hostname + " запрос списка пользователей")
     res.contentType("application/json")
     res.json([
         {
@@ -165,7 +145,6 @@ app.get('/Tech/hs/tsd/shops/get', (req, res) => {
         }
     ])
 });
-
 app.get('/SettingsForTSD.xml', (req, res) => {
     logger.info(req.hostname + " читаем файл с настройками")
     res.contentType("application/xml")
@@ -174,11 +153,11 @@ app.get('/SettingsForTSD.xml', (req, res) => {
             logger.error(err);
             return;
         }
-        logger.info(req.hostname)
+        console.log(req.hostname)
         let data = buff.toString();
         res.status(200).send(data)
     });
 
 })
-
-app.listen(port)
+app.listen(port, () =>
+    logger.info('Express.js listening on port 3000.'))

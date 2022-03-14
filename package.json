@@ -2,9 +2,8 @@
   "name": "tspl",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "exp.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "http": "nodemon exp.js"
   },
   "author": "",
@@ -14,6 +13,8 @@
     "express-basic-auth": "^1.2.1",
     "express-slow-down": "^1.4.0",
     "express-winston": "^4.2.0",
+    "morgan": "^1.10.0",
+    "morgan-json": "^1.1.0",
     "winston": "^3.6.0"
   },
   "devDependencies": {
