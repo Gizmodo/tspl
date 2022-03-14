@@ -3,19 +3,14 @@ const http = require("http");
 const Net = require('net');
 const hostHttp = 'localhost';
 const portHttp = 8000;
-// The port number and hostname of the server.
 const port = 9100;
-const host = '10.254.1.230';
-// Create a new TCP client.
+const host = '127.0.0.1';
 const tcpClient = new Net.Socket();
-// Send a connection request to the server.
-// The client can also receive data from the server by reading from its socket.
 function sendTCP(ip,payload){
 
 
 tcpClient.connect({port: 9100, host: payload.ip}, function () {
     console.log('TCP connection established with the server.');
-
     tcpClient.write(data, function () {
         res.end(`{"message": "Data was send to printer!"}`);
         tcpClient.end()
