@@ -1,10 +1,10 @@
 {
   "name": "tspl",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "",
-  "main": "exp.js",
+  "main": "index.js",
   "scripts": {
-    "http": "nodemon exp.js"
+    "http": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",

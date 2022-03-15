@@ -30,3 +30,21 @@
 {"level":"info","message":"Express.js listening on port 3000."}
 {"level":"info","message":"Express.js listening on port 3000."}
 {"level":"info","message":"Express.js listening on port 3000."}
+{"level":"info","message":"192.168.88.87 запрос списка пользователей"}
+{"contentLength":"487","level":"info","message":"HTTP Access Log","method":"GET","responseTime":6.132,"status":200,"timestamp":"2022-03-14 22:27:19","url":"/Tech/hs/tsd/users/get"}
+{"level":"info","message":"192.168.88.87 запрос списка пользователей"}
+{"contentLength":"487","level":"info","message":"HTTP Access Log","method":"GET","responseTime":3015.31,"status":200,"timestamp":"2022-03-14 22:28:57","url":"/Tech/hs/tsd/users/get"}
+{"level":"info","message":"192.168.88.87 запрос списка пользователей"}
+{"contentLength":"487","level":"info","message":"HTTP Access Log","method":"GET","responseTime":6004.998,"status":200,"timestamp":"2022-03-14 22:36:35","url":"/Tech/hs/tsd/users/get"}
+{"level":"info","message":"192.168.88.87 запрос списка пользователей"}
+{"contentLength":"487","level":"info","message":"HTTP Access Log","method":"GET","responseTime":9013.976,"status":200,"timestamp":"2022-03-14 22:38:40","url":"/Tech/hs/tsd/users/get"}
+{"level":"info","message":"Express.js listening on port 3000."}
+{"level":"info","message":"192.168.88.87 запрос списка пользователей"}
+{"contentLength":"487","level":"info","message":"HTTP Access Log","method":"GET","responseTime":6.727,"status":200,"timestamp":"2022-03-15 19:14:02","url":"/Tech/hs/tsd/users/get"}
+{"level":"info","message":"192.168.88.87 запрос списка магазинов"}
+{"contentLength":"994","level":"info","message":"HTTP Access Log","method":"GET","responseTime":3003.583,"status":200,"timestamp":"2022-03-15 19:14:10","url":"/Tech/hs/tsd/shops/get"}
+{"level":"info","message":"Express.js listening on port 3000."}
+{"level":"info","message":"Express.js listening on port 3000."}
+{"level":"info","message":"Express.js listening on port 3000."}
+{"level":"info","message":"Express.js listening on port 3000."}
+{"level":"info","message":"Express.js listening on port 3000."}
