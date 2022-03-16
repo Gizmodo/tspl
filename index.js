@@ -1,13 +1,15 @@
 const express = require('express')
-const app = express()
-const port = 3000
-const fs = require('fs')
 const basicAuth = require('express-basic-auth')
 const slowDown = require("express-slow-down");
 const logger = require('./log/logger')
 const httpLogger = require('./log/httpLogger')
 const Net = require('net');
-const tcpClient = new Net.Socket();
+const fs = require('fs')
+
+const app = express()
+const httpPort = 3000
+const tcpPort = 9100
+const server = Net.createServer()
 
 const speedLimiter = slowDown({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -31,6 +33,30 @@ function getUnauthorizedResponse(req) {
         : 'No credentials provided'
 }
 
+server.listen(tcpPort, function() {
+    console.log('TCP Server is running on port ' + tcpPort +'.');
+});
+
+let sockets = [];
+server.on('connection', function(sock) {
+    console.log('CONNECTED: ' + sock.remoteAddress + ':' + sock.remotePort);
+    sockets.push(sock);
+    sock.on('data', function(data) {
+        console.log('DATA ' + sock.remoteAddress + ': ' + data);
+// Write the data back to all the connected, the client will receive it as data from the server
+        sockets.forEach(function(sock, index, array) {
+            sock.write(sock.remoteAddress + ':' + sock.remotePort + " said " + data + '\n');
+        });
+    });
+// Add a 'close' event handler to this instance of socket
+    sock.on('close', function(data) {
+        let index = sockets.findIndex(function(o) {
+            return o.remoteAddress === sock.remoteAddress && o.remotePort === sock.remotePort;
+        })
+        if (index !== -1) sockets.splice(index, 1);
+        console.log('CLOSED: ' + sock.remoteAddress + ' ' + sock.remotePort);
+    });
+});
 app.get('/Tech/hs/tsd/printers/get', (req, res) => {
     logger.info(req.hostname + " запрос списка принтеров")
     res.contentType("application/json")
@@ -42,7 +68,7 @@ app.get('/Tech/hs/tsd/printers/get', (req, res) => {
                 "model": "XP-P323B"
             },
             {
-                "ip": "192.168.88.25",
+                "ip": "10.254.1.230",
                 "sn": "323WG76854802",
                 "model": "XP-P353B"
             }
@@ -162,20 +188,6 @@ app.get('/SettingsForTSD.xml', (req, res) => {
     });
 
 })
-app.listen(port, () =>
+app.listen(httpPort, () =>
     logger.info('Express.js listening on port 3000.'))
 
-function sendTCP(ip, payload) {
-    tcpClient.connect({port: 9100, host: payload.ip}, function () {
-        logger.info('TCP connection established with the server.');
-        tcpClient.write(data, function () {
-            tcpClient.end()
-        });
-    });
-    tcpClient.on('error', function () {
-        logger.error('Error TCP connection');
-    });
-    tcpClient.on('end', function () {
-        logger.info('Requested an end to the TCP connection');
-    });
-}
