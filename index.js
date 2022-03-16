@@ -17,7 +17,7 @@ const speedLimiter = slowDown({
     delayMs: 3000 // begin adding 500ms of delay per request above 100:
 });
 app.use(httpLogger)
-app.use(speedLimiter);
+//app.use(speedLimiter);
 
 let isUseAuth = false
 if (isUseAuth) {
@@ -74,7 +74,7 @@ app.get('/Tech/hs/tsd/printers/get', (req, res) => {
             }
             ,
             {
-                "ip": "192.168.88.11",
+                "ip": "192.168.88.87",
                 "sn": "323WG76854802",
                 "model": "XP-P353B"
             },
