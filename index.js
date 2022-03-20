@@ -91,6 +91,40 @@ app.get('/Tech/hs/tsd/printers/get', (req, res) => {
         ]
     })
 });
+app.get('TSD06/hs/tsd/printers/get', (req, res) => {
+    logger.info(req.hostname + " запрос списка принтеров")
+    res.contentType("application/json")
+    res.json({
+        "printers": [
+            {
+                "ip": "192.168.88.17",
+                "sn": "323WG20821002",
+                "model": "XP-P323B"
+            },
+            {
+                "ip": "10.254.1.230",
+                "sn": "323WG76854802",
+                "model": "XP-P353B"
+            }
+            ,
+            {
+                "ip": "192.168.88.87",
+                "sn": "323WG76854802",
+                "model": "XP-P353B"
+            },
+            {
+                "ip": "192.168.88.12",
+                "sn": "323WG76854802",
+                "model": "XP-P353B"
+            },
+            {
+                "ip": "192.168.88.13",
+                "sn": "323WG76854802",
+                "model": "XP-P353B"
+            }
+        ]
+    })
+});
 app.get('/Tech/hs/tsd/users/get', (req, res) => {
     logger.info(req.hostname + " запрос списка пользователей")
     res.contentType("application/json")
@@ -128,8 +162,8 @@ app.get('/Tech/hs/tsd/shops/get', (req, res) => {
     res.json([
         {
             "Префикс": "Д67",
-            "Наименование": "Десяточка №06 Черноречье ",
-            "Адрес": "192.168.213.8",
+            "Наименование": "TEST 3000 ",
+            "Адрес": "192.168.88.87:3000",
             "Сервис": "TSD06",
             "Шаблоны": [
                 "22ТТТТТМММММК"
