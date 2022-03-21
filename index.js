@@ -33,24 +33,24 @@ function getUnauthorizedResponse(req) {
         : 'No credentials provided'
 }
 
-server.listen(tcpPort, function() {
-    console.log('TCP Server is running on port ' + tcpPort +'.');
+server.listen(tcpPort, function () {
+    console.log('TCP Server is running on port ' + tcpPort + '.');
 });
 
 let sockets = [];
-server.on('connection', function(sock) {
+server.on('connection', function (sock) {
     console.log('CONNECTED: ' + sock.remoteAddress + ':' + sock.remotePort);
     sockets.push(sock);
-    sock.on('data', function(data) {
+    sock.on('data', function (data) {
         console.log('DATA ' + sock.remoteAddress + ': ' + data);
 // Write the data back to all the connected, the client will receive it as data from the server
-        sockets.forEach(function(sock, index, array) {
+        sockets.forEach(function (sock, index, array) {
             sock.write(sock.remoteAddress + ':' + sock.remotePort + " said " + data + '\n');
         });
     });
 // Add a 'close' event handler to this instance of socket
-    sock.on('close', function(data) {
-        let index = sockets.findIndex(function(o) {
+    sock.on('close', function (data) {
+        let index = sockets.findIndex(function (o) {
             return o.remoteAddress === sock.remoteAddress && o.remotePort === sock.remotePort;
         })
         if (index !== -1) sockets.splice(index, 1);
@@ -58,40 +58,6 @@ server.on('connection', function(sock) {
     });
 });
 app.get('/Tech/hs/tsd/printers/get', (req, res) => {
-    logger.info(req.hostname + " запрос списка принтеров")
-    res.contentType("application/json")
-    res.json({
-        "printers": [
-            {
-                "ip": "192.168.88.17",
-                "sn": "323WG20821002",
-                "model": "XP-P323B"
-            },
-            {
-                "ip": "10.254.1.230",
-                "sn": "323WG76854802",
-                "model": "XP-P353B"
-            }
-            ,
-            {
-                "ip": "192.168.88.87",
-                "sn": "323WG76854802",
-                "model": "XP-P353B"
-            },
-            {
-                "ip": "192.168.88.12",
-                "sn": "323WG76854802",
-                "model": "XP-P353B"
-            },
-            {
-                "ip": "192.168.88.13",
-                "sn": "323WG76854802",
-                "model": "XP-P353B"
-            }
-        ]
-    })
-});
-app.get('TSD06/hs/tsd/printers/get', (req, res) => {
     logger.info(req.hostname + " запрос списка принтеров")
     res.contentType("application/json")
     res.json({
@@ -161,10 +127,19 @@ app.get('/Tech/hs/tsd/shops/get', (req, res) => {
     res.contentType("application/json")
     res.json([
         {
-            "Префикс": "Д67",
-            "Наименование": "TEST 3000 ",
+            "Префикс": "Д87",
+            "Наименование": "88.87:3000",
             "Адрес": "192.168.88.87:3000",
-            "Сервис": "TSD06",
+            "Сервис": "TSD88",
+            "Шаблоны": [
+                "22ТТТТТМММММК"
+            ]
+        },
+        {
+            "Префикс": "Д230",
+            "Наименование": "1.230:3000",
+            "Адрес": "10.254.1.230:3000",
+            "Сервис": "TSD230",
             "Шаблоны": [
                 "22ТТТТТМММММК"
             ]
@@ -208,19 +183,218 @@ app.get('/Tech/hs/tsd/shops/get', (req, res) => {
         }
     ])
 });
-app.get('/SettingsForTSD.xml', (req, res) => {
-    logger.info(req.hostname + " читаем файл с настройками")
-    res.contentType("application/xml")
-    fs.readFile("SettingsForTSD.xml", (err, buff) => {
-        if (err) {
-            logger.error(err);
-            return;
-        }
-        console.log(req.hostname)
-        let data = buff.toString();
-        res.status(200).send(data)
-    });
 
+app.get('/TSD230/hs/tsd/printers/get', (req, res) => {
+    logger.info(req.hostname + " запрос списка принтеров магазина TSD230")
+    res.contentType("application/json")
+    res.json({
+        "printers": [
+            {
+                "ip": "192.168.88.17",
+                "sn": "323WG20821002",
+                "model": "XP-P323B"
+            },
+            {
+                "ip": "10.254.1.230",
+                "sn": "323WG76854802",
+                "model": "XP-P353B"
+            }
+            ,
+            {
+                "ip": "192.168.88.87",
+                "sn": "323WG76854802",
+                "model": "XP-P353B"
+            },
+            {
+                "ip": "192.168.88.12",
+                "sn": "323WG76854802",
+                "model": "XP-P353B"
+            },
+            {
+                "ip": "192.168.88.13",
+                "sn": "323WG76854802",
+                "model": "XP-P353B"
+            }
+        ]
+    })
+});
+app.get('/TSD88/hs/tsd/printers/get', (req, res) => {
+    logger.info(req.hostname + " запрос списка принтеров магазина TSD88")
+    res.contentType("application/json")
+    res.json({
+        "printers": [
+            {
+                "ip": "192.168.88.17",
+                "sn": "323WG20821002",
+                "model": "XP-P323B"
+            },
+            {
+                "ip": "10.254.1.230",
+                "sn": "323WG76854802",
+                "model": "XP-P353B"
+            }
+            ,
+            {
+                "ip": "192.168.88.87",
+                "sn": "323WG76854802",
+                "model": "XP-P353B"
+            },
+            {
+                "ip": "192.168.88.12",
+                "sn": "323WG76854802",
+                "model": "XP-P353B"
+            },
+            {
+                "ip": "192.168.88.13",
+                "sn": "323WG76854802",
+                "model": "XP-P353B"
+            }
+        ]
+    })
+});
+app.post('/TSD88/hs/tsd/pricetag/POST', (req, res) => {
+    logger.info(req.hostname + " запрос информации по ценникам для магазина TSD88")
+    res.contentType("application/json")
+    res.json([
+        {
+            "barcode": "2210005001232",
+            "found": true,
+            "code": "10005",
+            "plu": 3,
+            "string1": "Сахарный песок",
+            "string2": "1 кг",
+            "string3": "",
+            "string4": "",
+            "manufacturer": "Россия",
+            "price": 49.9,
+            "stock": 0,
+            "nodiscount": true
+        },
+        {
+            "barcode": "10005",
+            "found": true,
+            "code": "10005",
+            "plu": 3,
+            "string1": "Сахарный песок",
+            "string2": "1 кг",
+            "string3": "",
+            "string4": "",
+            "manufacturer": "Россия",
+            "price": 49.9,
+            "stock": 0,
+            "nodiscount": true
+        },
+        {
+            "barcode": "10006",
+            "found": true,
+            "code": "10006",
+            "plu": 0,
+            "string1": "Сода пищевая",
+            "string2": "500 г",
+            "string3": "",
+            "string4": "",
+            "manufacturer": "г. Стерлитамак",
+            "price": 26.5,
+            "stock": 0,
+            "nodiscount": false
+        }
+    ])
+})
+app.post('/TSD230/hs/tsd/pricetag/POST', (req, res) => {
+    logger.info(req.hostname + " запрос информации по ценникам для магазина TSD230 1POST")
+    res.contentType("application/json")
+    res.json([
+        {
+            "barcode": "2210005001232",
+            "found": true,
+            "code": "10005",
+            "plu": 3,
+            "string1": "Сахарный песок",
+            "string2": "1 кг",
+            "string3": "",
+            "string4": "",
+            "manufacturer": "Россия",
+            "price": 49.9,
+            "stock": 0,
+            "nodiscount": true
+        },
+        {
+            "barcode": "10005",
+            "found": true,
+            "code": "10005",
+            "plu": 3,
+            "string1": "Сахарный песок",
+            "string2": "1 кг",
+            "string3": "",
+            "string4": "",
+            "manufacturer": "Россия",
+            "price": 49.9,
+            "stock": 0,
+            "nodiscount": true
+        },
+        {
+            "barcode": "10006",
+            "found": true,
+            "code": "10006",
+            "plu": 0,
+            "string1": "Сода пищевая",
+            "string2": "500 г",
+            "string3": "",
+            "string4": "",
+            "manufacturer": "г. Стерлитамак",
+            "price": 26.5,
+            "stock": 0,
+            "nodiscount": false
+        }
+    ])
+})
+app.post('/TSD230/hs/tsd/pricetag', (req, res) => {
+    logger.info(req.hostname + " запрос информации по ценникам для магазина TSD230")
+    res.contentType("application/json")
+    res.json([
+        {
+            "barcode": "2210005001232",
+            "found": true,
+            "code": "10005",
+            "plu": 3,
+            "string1": "Сахарный песок",
+            "string2": "1 кг",
+            "string3": "",
+            "string4": "",
+            "manufacturer": "Россия",
+            "price": 49.9,
+            "stock": 0,
+            "nodiscount": true
+        },
+        {
+            "barcode": "10005",
+            "found": true,
+            "code": "10005",
+            "plu": 3,
+            "string1": "Сахарный песок",
+            "string2": "1 кг",
+            "string3": "",
+            "string4": "",
+            "manufacturer": "Россия",
+            "price": 49.9,
+            "stock": 0,
+            "nodiscount": true
+        },
+        {
+            "barcode": "10006",
+            "found": true,
+            "code": "10006",
+            "plu": 0,
+            "string1": "Сода пищевая",
+            "string2": "500 г",
+            "string3": "",
+            "string4": "",
+            "manufacturer": "г. Стерлитамак",
+            "price": 26.5,
+            "stock": 0,
+            "nodiscount": false
+        }
+    ])
 })
 app.listen(httpPort, () =>
     logger.info('Express.js listening on port 3000.'))
